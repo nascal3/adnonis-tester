@@ -8,6 +8,18 @@ class UserController {
     await auth.login(user);
     return response.redirect('/');
   }
+
+  async login({request, response, auth, session}) {
+    const { email, password } = request.all();
+
+    try {
+      await auth.attempt(email, password);
+      return response.redirect('/');
+    } catch (err) {
+      session.flash({ loginError: 'Username or password is wrong!' });
+      response.redirect('/login');
+    }
+  }
 }
 
 module.exports = UserController
